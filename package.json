@@ -1,0 +1,13 @@
+{
+  "name": "phl-airport-ivr",
+  "version": "0.0.1",
+  "description": "Tropo application to provide flight information for PHL Airport",
+  "main": "app.js",
+  "repository": "",
+  "author": "Mark Headd",
+  "dependencies": {
+    "express": "latest",
+    "tropo": "latest",
+    "request": "latest"
+  }
+}
