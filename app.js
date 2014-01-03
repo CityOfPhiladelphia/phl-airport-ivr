@@ -10,6 +10,10 @@ var apiEndpoint = 'http://flightinfo.phlapi.com/number/'
 
 // Transfer number.
 var transferNumber = "2159991111";
+function operatorTransfer(){
+        tropo.say("Please hold.");
+        tropo.transfer(transferNumber);
+}
 
 // Create express app.
 var app = express();
@@ -85,18 +89,18 @@ app.post('/result', function(req, res) {
 			break;
 
 		case "3":
-			tropo.say("Please hold.");
-			tropo.transfer(transferNumber);
-			break;
-
-		case "4":
 			tropo.on("continue", null, "/options?language=" + language, true);
 			break;
 
-		case "5":
+		case "4":
 			tropo.say("Thank you for calling. Goodbye.");
 			tropo.hangup();
 			break;
+                                                
+		case "0":
+			operatorTransfer();
+			break;
+
 	}
 	res.send(tropowebapi.TropoJSON(tropo));
 });
@@ -120,6 +124,9 @@ app.post('/ask', function(req, res) {
 	var direction = req.query.direction;
 	var result = req.body;
 	var flightNumber = result.result.actions.interpretation;
+                if (flightNumber===0000||flightNumber===00000){
+                operatorTransfer();
+        }
 	var tropo = new tropowebapi.TropoWebAPI();
 	var say = new Say(prompts.youEnteredPrompt + flightNumber.split("").join(" ") + prompts.ifCorrectPrompt);
 	var choices = new Choices("[1 DIGITS]", "dtmf");
@@ -135,6 +142,10 @@ app.post('/confirm', function(req, res) {
 	var flightNumber = req.query.flightNumber;
 	var result = req.body;
 	var selection = result.result.actions.interpretation;
+        if (selection===0) {
+                operatorTransfer();
+        }
+
 	var tropo = new tropowebapi.TropoWebAPI();
 	tropo.say(".");
 	if(selection == 1) {
